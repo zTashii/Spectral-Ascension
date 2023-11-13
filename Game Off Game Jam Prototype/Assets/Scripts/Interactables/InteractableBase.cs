@@ -18,6 +18,7 @@ public abstract class InteractableBase : MonoBehaviour
     {
         if(isInteractable && UserInput.instance.controls.Player.Interact.WasPerformedThisFrame())
         {
+            
             Interact();
         }
     }

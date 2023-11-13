@@ -15,7 +15,7 @@ public class PlayerController : MonoBehaviour
     public float jumpVelocity;
     public float slideSpeed;
     public float climbSpeed;
-    public float dashForce;
+    public Vector2 dashVelocity;
     public int direction;
     public float wallJumpLerp;
     public Vector2 wallJumpVelocity;
@@ -42,9 +42,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private float raycastLength;
 
-    public Collider2D SpectralAnchors = null;
-    
-
+    public Collider2D spectralAnchors;
+    public GameObject interactableSpectralAnchor;
     public static PlayerController instance
     {
         get
@@ -120,15 +119,17 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        
-        
         if (this.playerState.isGhost)
         {
+            this.playerState.canMove = false;
             GetMousePos();
             movement = Vector2.zero;
+            
         }
         else
         {
+            this.rBody.bodyType = RigidbodyType2D.Dynamic;
+            //this.playerState.canMove = true;
             Jump();
             Dash();
             WallSlide();
@@ -137,11 +138,7 @@ public class PlayerController : MonoBehaviour
         }
         CheckOnGround();
         CheckOnWall();
-        if (this.playerState.onGround)
-        {
-            //this.playerState.isGhost = false;
-            this.playerState.canMove = true;
-        }
+        
         
     }
 
@@ -184,33 +181,34 @@ public class PlayerController : MonoBehaviour
             if (this.playerState.wallSliding)
             {
                 this.playerState.wallJumping = true;
-                
+                this.playerState.canMove = false;
                 this.rBody.velocity = new Vector2(this.wallJumpVelocity.x * -direction, this.wallJumpVelocity.y);
                 
             }
            
         }
-        //if (this.rBody.velocity.y < 0 )
-        //{
-        //    this.rBody.velocity += new Vector2(0f, Physics2D.gravity.y * Time.deltaTime);
-        //}
-        //else if (UserInput.instance.controls.Player.Jump.WasReleasedThisFrame())
-        //{
-        //    if (this.rBody.velocity.y > 0)
-        //    {
-        //        this.rBody.velocity = new Vector2(this.rBody.velocity.x, this.rBody.velocity.y * Physics2D.gravity.y * Time.deltaTime);
-        //    }
-        //}
+        if (this.rBody.velocity.y < 0)
+        {
+            this.rBody.velocity += new Vector2(0f, Physics2D.gravity.y * Time.deltaTime);
+        }
+        else if (UserInput.instance.controls.Player.Jump.WasReleasedThisFrame())
+        {
+            if (this.rBody.velocity.y > 0)
+            {
+                this.rBody.velocity = new Vector2(this.rBody.velocity.x, this.rBody.velocity.y * Physics2D.gravity.y * Time.deltaTime);
+            }
+        }
     }
     public void Dash()
     {
-        if (UserInput.instance.controls.Player.Dash.WasPerformedThisFrame())
+        if (UserInput.instance.controls.Player.Dash.WasPerformedThisFrame() && !this.playerState.wallSliding && this.playerState.canDash)
         {
-            if (movement.x != 0 || movement.y != 0 && !this.playerState.hasDashed)
+            if ((movement.x != 0 || movement.y != 0) && !this.playerState.hasDashed)
             {
                 this.playerState.hasDashed = true;
+                this.playerState.canMove = false;
                 this.rBody.velocity = Vector2.zero;
-                this.rBody.velocity = new Vector2(this.dashForce, this.dashForce);
+                this.rBody.velocity = new Vector2(this.dashVelocity.x * direction, this.dashVelocity.y);
                 StartCoroutine(DashWait());
             }
         }
@@ -219,15 +217,16 @@ public class PlayerController : MonoBehaviour
     IEnumerator DashWait()
     {
         
-        this.rBody.gravityScale = 0;
+        //this.rBody.gravityScale = 0;
         this.playerState.canJump = false;
         this.playerState.isDashing = true;
         this.playerState.wallJumping = true;
         yield return new WaitForSeconds(0.3f);
         this.playerState.canJump = true;
         this.playerState.wallJumping = false;
-        this.rBody.gravityScale = 7;
+        //this.rBody.gravityScale = 7;
         this.playerState.isDashing = false;
+        this.playerState.canMove = true;
 
     }
     public void WallSlide()
@@ -268,13 +267,16 @@ public class PlayerController : MonoBehaviour
         if (this.CheckForGround())
         {
             this.playerState.onGround = true;
-            this.playerState.canJump = true;
             this.playerState.hasDashed = false;
             //this.playerState.isGhost = false;
+            this.playerState.canDash = false;
+            this.playerState.canJump = true;
+            this.playerState.canMove = true;
         }
         else
         {
             this.playerState.onGround = false;
+            this.playerState.canDash = true;
         }
     }
     public bool CheckForGround()
@@ -374,7 +376,8 @@ public class PlayerController : MonoBehaviour
 
     public void MoveToAnchors()
     {
-        StartCoroutine(MoveTo(SpectralAnchors.transform.position, maxSpeed));
+        StartCoroutine(MoveTo(spectralAnchors.transform.position, maxSpeed));
+        rBody.bodyType = RigidbodyType2D.Kinematic;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -382,7 +385,7 @@ public class PlayerController : MonoBehaviour
 
         if (collision.CompareTag("Anchor"))
         {
-            SpectralAnchors = collision;
+            spectralAnchors = collision;
             //this.movement = Vector2.zero;
             //this.playerState.isGhost = true;
             if (this.playerState.isGhost)
@@ -392,7 +395,7 @@ public class PlayerController : MonoBehaviour
                 //transform.position = collision.transform.position;
                 //StartCoroutine(MoveTo(collision.transform.position, maxSpeed));
 
-                rBody.bodyType = RigidbodyType2D.Kinematic;
+                
                 //rBody.velocity = Vector2.zero;
             }
         }
@@ -400,9 +403,19 @@ public class PlayerController : MonoBehaviour
         {
             rBody.velocity = maxSpeed * normalizedPull * -ghostDirection;
         }
-       
-    }
+        if(collision.CompareTag("Death Mist"))
+        {
+            if (this.playerState.isGhost)
+            {
+                this.transform.position = this.interactableSpectralAnchor.transform.position;
+            }
+            else
+            {
+                //Teleport to safe spot
+            }
+        }
 
+    }
 
     private void OnTriggerExit2D(Collider2D collision)
     {

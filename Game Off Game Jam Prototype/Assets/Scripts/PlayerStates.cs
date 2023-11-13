@@ -11,6 +11,7 @@ public class PlayerStates
     public bool isGhost;
     public bool canMove;
     public bool canJump;
+    public bool canDash;
     public bool jumping;
     public bool isDashing;
     public bool hasDashed;
@@ -64,6 +65,7 @@ public class PlayerStates
         this.isGhost = false;
         this.canMove = false;
         this.canJump = false;
+        this.canDash = false;
         this.jumping = false;
         this.isDashing = false;
         this.hasDashed = false;

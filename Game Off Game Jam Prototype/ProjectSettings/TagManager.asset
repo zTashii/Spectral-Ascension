@@ -7,6 +7,7 @@ TagManager:
   - Anchor
   - Pickup
   - Space Block
+  - Death Mist
   layers:
   - Default
   - TransparentFX
