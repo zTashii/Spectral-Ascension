@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class Key : MonoBehaviour
 {
+
     public enum KeyType { Normal, Spectral };
     public KeyType keyType;
-   
+
 }

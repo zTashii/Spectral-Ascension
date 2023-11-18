@@ -21,6 +21,7 @@ public abstract class InteractableBase : MonoBehaviour
             
             Interact();
         }
+        
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {

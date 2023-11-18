@@ -8,8 +8,8 @@ public class KeyControl : MonoBehaviour
    
     public GameObject player;
     public GameObject pickupAnchor;
-    public List<Key> key; //Change to own object script to handle normal / spectral keys
-    public bool followPlayer = true;
+    public List<Key> key; 
+    public bool followPlayer;
     public PlayerController playerController;
 
     //Follow Target Variables;
@@ -29,6 +29,7 @@ public class KeyControl : MonoBehaviour
         if (followPlayer)
         {
             FollowPlayer();
+            
         }
         CheckPlayerAndKeyType();
         
@@ -85,11 +86,14 @@ public class KeyControl : MonoBehaviour
     {
         if (collision.CompareTag("Key"))
         {
+            followPlayer = true;
             collision.gameObject.transform.SetParent(this.pickupAnchor.transform, true);
             collision.gameObject.transform.position = this.pickupAnchor.transform.position;
+            collision.GetComponent<Collider2D>().enabled = false;
             key.Add(collision.GetComponent<Key>());
             //move to 
         }
+        
     }
 
 }

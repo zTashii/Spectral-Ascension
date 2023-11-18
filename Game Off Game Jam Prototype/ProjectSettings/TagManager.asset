@@ -8,9 +8,9 @@ TagManager:
   - Pickup
   - Space Block
   - Death Mist
-  - Door Key
-  - Door
   - Key
+  - Door
+  - KeyTotem
   layers:
   - Default
   - TransparentFX
