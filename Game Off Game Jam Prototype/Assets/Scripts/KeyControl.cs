@@ -33,17 +33,22 @@ public class KeyControl : MonoBehaviour
         {
             if(keys.keyType == Key.KeyType.Normal && !this.playerController.playerState.isGhost)
             {
-                keys.gameObject.SetActive(true);
+                //keys.gameObject.SetActive(true);
+                keys.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 1);
             }
             else if(keys.keyType == Key.KeyType.Spectral && this.playerController.playerState.isGhost)
             {
-                keys.gameObject.SetActive(true);
+                //keys.gameObject.SetActive(true);
+                keys.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 1);
+
             }
             else
             {
-                keys.gameObject.SetActive(false);
+                //keys.gameObject.SetActive(false);
+                keys.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0.4f);
+
             }
-        
+
         }
         
     }
@@ -53,11 +58,15 @@ public class KeyControl : MonoBehaviour
     {
         if (collision.CompareTag("Key"))
         {
-            //collision.gameObject.transform.SetParent(this.pickupAnchor.transform, true);
+            collision.gameObject.transform.SetParent(null);
             //collision.gameObject.transform.position = this.pickupAnchor.transform.position;
             collision.GetComponent<Collider2D>().enabled = false;
             key.Add(collision.GetComponent<Key>());
             //move to 
+        }
+        if(collision.CompareTag("Key Pedestal"))
+        {
+            collision.GetComponent<Collider2D>().enabled = true;
         }
         
     }
