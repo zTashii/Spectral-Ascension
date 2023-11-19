@@ -4,14 +4,18 @@ using UnityEngine;
 
 public class DoorControl : MonoBehaviour
 {
+    [Range(0, 4)]
+    public int requiredNormalKeys;
+    [Range(0, 4)]
+    public int requiredSpectralKeys;
+
     public GameObject door;
     public GameObject player;
     public PlayerController playerController;
     public KeyControl keyControl;
 
     public List<Key> keys;
-    public int requiredNormalKeys;
-    public int requiredSpectralKeys;
+   
     public bool normalFilled;
     public bool spectralFilled;
 
@@ -23,7 +27,7 @@ public class DoorControl : MonoBehaviour
             keyControl = player.GetComponent<KeyControl>();
             MoveKeys();
 
-            if (KeyCount(Key.KeyType.Normal, keys) == requiredNormalKeys)
+            if (KeyCount(Key.KeyType.Normal) == requiredNormalKeys)
             {
                 normalFilled = true;
             }
@@ -31,7 +35,7 @@ public class DoorControl : MonoBehaviour
             {
                 normalFilled = false;
             }
-            if (KeyCount(Key.KeyType.Spectral, keys) == requiredSpectralKeys)
+            if (KeyCount(Key.KeyType.Spectral) == requiredSpectralKeys)
             {
                 spectralFilled = true;
             }
@@ -47,53 +51,38 @@ public class DoorControl : MonoBehaviour
         
     }
 
-
-    public int KeyCount(Key.KeyType key, List<Key> keyList)
+    public int KeyCount(Key.KeyType key)
     {
         int count =0;
-        for (int i = 0; i < keyList.Count; i++)
+        for (int i = 0; i < keys.Count; i++)
         {
 
-            if(keyList[i].keyType == key)
+            if(keys[i].keyType == key)
             {
                 count++;
             }
         }
         return count;
     }
+    IEnumerator Wait(GameObject obj)
+    {
+        yield return new WaitForSeconds(1.2f);
+        obj.SetActive(false);
+    }
 
-    //add set locations to a list
-    //compare list to location list, keys lerp/movetowards locations based on location in list, if key in slot 1 in list, make that go to slot 1 in location list.
     public void MoveKeys()
     {
         for (int i = 0; i < keyControl.key.Count; i++)
         {
             keys.Add(keyControl.key[i]);
             keyControl.key[i].gameObject.transform.SetParent(this.transform);
-            
-            //keyControl.key[i].gameObject.transform.position = this.transform.position; //make set to a specific location;
             keyControl.key.Remove(keyControl.key[i]);
-
             
         }
         for (int i = 0; i < keys.Count; i++)
         {
-            //for (int y = 0; y < keyLocations.Count; y++)
-            //{
-            //    if (i == y)
-            //    {
-            //        if (keys[i].keyType == Key.KeyType.Normal)
-            //        {
-            //            keys[i].transform.position = Vector2.Lerp(keys[i].transform.position, keyLocations[y].transform.position, Time.deltaTime * 5);
-            //            keys[i].transform.position = keyLocations[y].transform.position;
-            //        }
-            //        if (keys[i].keyType == Key.KeyType.Spectral)
-            //        {
-            //            keys[i].transform.position = Vector2.Lerp(keys[i].transform.position, keyLocations[y].transform.position, Time.deltaTime * 5);
-
-            //        }
-            //    }
-            //}
+            keys[i].transform.position = Vector2.Lerp(keys[i].transform.position, transform.position, Time.deltaTime * 5);
+            StartCoroutine(Wait(keys[i].gameObject));
         }
     }
 

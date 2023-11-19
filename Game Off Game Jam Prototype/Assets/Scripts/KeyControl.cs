@@ -7,11 +7,9 @@ public class KeyControl : MonoBehaviour
 
    
     public GameObject player;
-    public GameObject pickupAnchor;
     public List<Key> key; 
-    public bool followPlayer;
-    public PlayerController playerController;
 
+    public PlayerController playerController;
     //Follow Target Variables;
     [SerializeField] private List<Vector3> storedPositions;
     [SerializeField] private int followDistance;
@@ -26,13 +24,7 @@ public class KeyControl : MonoBehaviour
     }
     private void Update()
     {
-        if (followPlayer)
-        {
-            FollowPlayer();
-            
-        }
         CheckPlayerAndKeyType();
-        
     }
 
     void CheckPlayerAndKeyType()
@@ -55,40 +47,14 @@ public class KeyControl : MonoBehaviour
         }
         
     }
-    public void FollowPlayer()
-    {
-        if (storedPositions.Count == 0)
-        {
-            storedPositions.Add(new Vector2(pickupAnchor.transform.position.x, pickupAnchor.transform.position.y)); //store the players currect position
-            return;
-        }
-        else if (storedPositions[storedPositions.Count - 1] != pickupAnchor.transform.position)
-        {
-            //Debug.Log("Add to list");
-            storedPositions.Add(new Vector2(pickupAnchor.transform.position.x, pickupAnchor.transform.position.y)); //store the position every frame
-        }
-
-        if (storedPositions.Count > followDistance)
-        {
-            foreach (Key keys in key) 
-            { 
-                keys.transform.position = Vector2.Lerp(keys.transform.position, storedPositions[0], speed * Time.deltaTime); //move
-                //keys.transform.position = storedPositions[0];
-                storedPositions.RemoveAt(0); //delete the position that player just move to
-            }
-        }
-
-    }
-
 
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Key"))
         {
-            followPlayer = true;
-            collision.gameObject.transform.SetParent(this.pickupAnchor.transform, true);
-            collision.gameObject.transform.position = this.pickupAnchor.transform.position;
+            //collision.gameObject.transform.SetParent(this.pickupAnchor.transform, true);
+            //collision.gameObject.transform.position = this.pickupAnchor.transform.position;
             collision.GetComponent<Collider2D>().enabled = false;
             key.Add(collision.GetComponent<Key>());
             //move to 

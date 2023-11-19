@@ -1,12 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+[ExecuteInEditMode]
 public class PedestalController : MonoBehaviour
 {
-    public int requiredNormalKeys;
-    public int requiredSpectralKeys;
-
     public Sprite normalBase;
     public Sprite spectralBase;
 
@@ -36,12 +33,6 @@ public class PedestalController : MonoBehaviour
     {
         CheckRoomState();
         UpdatePedestal();
-        //Initialize();
-    }
-    private void Start()
-    {
-        //Initialize();
-        
     }
 
 
@@ -57,33 +48,6 @@ public class PedestalController : MonoBehaviour
         }
     }
 
-    void Initialize()
-    {
-        if(roomManager.roomType == RoomManager.RoomType.NormalRoom)
-        {
-            for(int i = 0; i < requiredNormalKeys; i++)
-            {
-                for (int y = 0; y < requiredSpectralKeys; y++)
-                {
-                    keyDisplay[i].SetActive(true);
-                    tinyKeyDisplay[y].SetActive(true);
-                }
-            }
-        }
-        else if (roomManager.roomType == RoomManager.RoomType.SpectralRoom)
-        {
-            for (int i = 0; i < requiredSpectralKeys; i++)
-            {
-                for (int y = 0; y < requiredNormalKeys; y++)
-                {
-                    tinyKeyDisplay[y].SetActive(true);
-                    keyDisplay[i].SetActive(true);
-                }
-            }
-            
-        }
-    }
-
     void UpdatePedestal()
     {
         for (int i = 0; i < keyDisplay.Count; i++)
@@ -92,7 +56,7 @@ public class PedestalController : MonoBehaviour
             {
                 if (roomManager.roomType == RoomManager.RoomType.NormalRoom)
                 {
-                    if (i < requiredNormalKeys)
+                    if (i < doorControl.requiredNormalKeys)
                     {
                         keyDisplay[i].SetActive(true);
                     }
@@ -100,7 +64,7 @@ public class PedestalController : MonoBehaviour
                     {
                         keyDisplay[i].SetActive(false);
                     }
-                    if (y < requiredSpectralKeys)
+                    if (y < doorControl.requiredSpectralKeys)
                     {
                         tinyKeyDisplay[y].SetActive(true);
                     }
@@ -108,13 +72,25 @@ public class PedestalController : MonoBehaviour
                     {
                         tinyKeyDisplay[y].SetActive(false);
                     }
-                    
+                    if(i < doorControl.KeyCount(Key.KeyType.Normal))
+                    {
+                        keyDisplay[i].GetComponent<SpriteRenderer>().sprite = normal;
+                    }
+                    else if(y < doorControl.KeyCount(Key.KeyType.Spectral))
+                    {
+                        tinyKeyDisplay[y].GetComponent<SpriteRenderer>().sprite = tinySpectral;
+                    }
+                    else
+                    {
+                        keyDisplay[i].GetComponent<SpriteRenderer>().sprite = inactive;
+                        tinyKeyDisplay[y].GetComponent<SpriteRenderer>().sprite = tinyInactive;
+                    }
 
 
                 }
                 if (roomManager.roomType == RoomManager.RoomType.SpectralRoom)
                 {
-                    if (i < requiredSpectralKeys)
+                    if (i < doorControl.requiredSpectralKeys)
                     {
                         keyDisplay[i].SetActive(true);
                     }
@@ -122,7 +98,7 @@ public class PedestalController : MonoBehaviour
                     {
                         keyDisplay[i].SetActive(false);
                     }
-                    if (y < requiredNormalKeys)
+                    if (y < doorControl.requiredNormalKeys)
                     {
                         tinyKeyDisplay[y].SetActive(true);
                     }
@@ -130,10 +106,24 @@ public class PedestalController : MonoBehaviour
                     {
                         tinyKeyDisplay[y].SetActive(false);
                     }
+                    if (i < doorControl.KeyCount(Key.KeyType.Spectral))
+                    {
+                        keyDisplay[i].GetComponent<SpriteRenderer>().sprite = spectral;
+                    }
+                    else if (y < doorControl.KeyCount(Key.KeyType.Normal))
+                    {
+                        tinyKeyDisplay[y].GetComponent<SpriteRenderer>().sprite = tinyNormal;
+                    }
+                    else
+                    {
+                        keyDisplay[i].GetComponent<SpriteRenderer>().sprite = inactive;
+                        tinyKeyDisplay[y].GetComponent<SpriteRenderer>().sprite = tinyInactive;
+                    }
                 }
             }
         }
         
+       
 
     }
 }
