@@ -21,6 +21,8 @@ public class PlayerController : MonoBehaviour
     public Vector2 wallJumpVelocity;
     public int wallDirX;
 
+    Vector2 velocity;
+
     public AnimationCurve curve;
     //public AnimationCurve gravity;
     private GameManager gameManager;
@@ -295,7 +297,7 @@ public class PlayerController : MonoBehaviour
     }
     private void CheckOnWall()
     {
-        if (this.CheckForWall())
+        if (this.CheckForWall() && !this.playerState.isGhost)
         {
             this.playerState.onWall = true;
             
@@ -366,8 +368,10 @@ public class PlayerController : MonoBehaviour
         this.rBody.velocity = Vector2.zero;
         while (this.gameObject.transform.position != targetPosition)
         {
-            this.gameObject.transform.position = Vector2.MoveTowards(this.gameObject.transform.position, targetPosition, linearSpeed * Time.deltaTime);            
+            this.gameObject.transform.position = Vector2.MoveTowards(this.gameObject.transform.position, targetPosition, linearSpeed * Time.deltaTime);
+            //this.gameObject.transform.position = Vector2.SmoothDamp(transform.position, targetPosition, ref velocity, 0.5f);
             yield return null;
+            
         }
         this.gameObject.transform.position = targetPosition;
         this.anchorPosition = this.transform.position;
@@ -393,6 +397,8 @@ public class PlayerController : MonoBehaviour
                 this.playerState.canMove = false;
                 MoveToAnchors();
                 //transform.position = collision.transform.position;
+                //this.rBody.bodyType = RigidbodyType2D.Kinematic;
+                //this.anchorPosition = transform.position;
                 //StartCoroutine(MoveTo(collision.transform.position, maxSpeed));
 
 
@@ -405,14 +411,8 @@ public class PlayerController : MonoBehaviour
         }
         if (collision.CompareTag("Death Mist"))
         {
-            if (this.playerState.isGhost)
-            {
-                this.gameObject.transform.position = this.interactableSpectralAnchor.transform.position;
-            }
-            else
-            {
-                //Teleport to safe spot
-            }
+            //StopAllCoroutines();
+            this.transform.position = this.interactableSpectralAnchor.transform.position;
         }
        
 
@@ -422,7 +422,10 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.CompareTag("Anchor"))
         {
+            //spectralAnchors = null;
             this.anchorPosition = Vector2.zero;
+
+
         }
     }
 

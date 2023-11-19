@@ -22,11 +22,29 @@ public class SpectreInteractable : InteractableBase
         //{
         //    roomManager.roomType = RoomManager.RoomType.NormalRoom;
         //}
-        playerController.interactableSpectralAnchor = this.gameObject;
+        //playerController.interactableSpectralAnchor = this.gameObject;
         this.playerController.playerState.canMove = !this.playerController.playerState.canMove;
         this.playerController.playerState.isGhost = !this.playerController.playerState.isGhost;
         this.playerController.MoveToAnchors();
     }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.gameObject == player)
+        {
+            playerController.interactableSpectralAnchor = this.gameObject;
+            interactIcon.SetActive(true);
+            isInteractable = true;
+        }
+    }
 
-    
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject == player)
+        {
+            interactIcon.SetActive(false);
+            isInteractable = false;
+        }
+    }
+
+
 }
