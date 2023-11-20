@@ -10,6 +10,7 @@ TagManager:
   - Death Mist
   - Key
   - Door
+  - Pedestal
   - Key Pedestal
   layers:
   - Default
@@ -45,6 +46,9 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Background
+    uniqueID: 1464777845
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0

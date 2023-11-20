@@ -25,6 +25,7 @@ public class KeyControl : MonoBehaviour
     private void Update()
     {
         CheckPlayerAndKeyType();
+        IgnoreCol();
     }
 
     void CheckPlayerAndKeyType()
@@ -52,6 +53,14 @@ public class KeyControl : MonoBehaviour
         }
         
     }
+    void IgnoreCol()
+    {
+
+        foreach (Key key in key)
+        {
+            Physics2D.IgnoreCollision(key.GetComponent<Collider2D>(), this.gameObject.GetComponent<Collider2D>());
+        }
+    }
 
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -60,13 +69,9 @@ public class KeyControl : MonoBehaviour
         {
             collision.gameObject.transform.SetParent(null);
             //collision.gameObject.transform.position = this.pickupAnchor.transform.position;
-            collision.GetComponent<Collider2D>().enabled = false;
+            //collision.GetComponent<Collider2D>().enabled = false;
             key.Add(collision.GetComponent<Key>());
             //move to 
-        }
-        if(collision.CompareTag("Key Pedestal"))
-        {
-            collision.GetComponent<Collider2D>().enabled = true;
         }
         
     }

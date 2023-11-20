@@ -23,6 +23,14 @@ public class SpectreInteractable : InteractableBase
         //    roomManager.roomType = RoomManager.RoomType.NormalRoom;
         //}
         //playerController.interactableSpectralAnchor = this.gameObject;
+        if (!playerController.playerState.isGhost)
+        {
+            playerController.animator.SetTrigger("GhostIn");
+        }
+        else
+        {
+            playerController.animator.SetTrigger("GhostOut");
+        }
         this.playerController.playerState.canMove = !this.playerController.playerState.canMove;
         this.playerController.playerState.isGhost = !this.playerController.playerState.isGhost;
         this.playerController.MoveToAnchors();

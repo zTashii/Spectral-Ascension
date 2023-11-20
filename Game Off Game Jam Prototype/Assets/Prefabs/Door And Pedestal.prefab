@@ -376,9 +376,9 @@ GameObject:
   m_Component:
   - component: {fileID: 7433176388022578359}
   - component: {fileID: 2064413914494249020}
+  - component: {fileID: 2127632760054175193}
   - component: {fileID: 2460854691240258346}
   - component: {fileID: 2134234174423663979}
-  - component: {fileID: 2127632760054175193}
   m_Layer: 0
   m_Name: Key Pedestal
   m_TagString: Key Pedestal
@@ -456,60 +456,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &2460854691240258346
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3227965890508331983}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 03fadcf306f177c4bbe161cffa47cf7c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  requiredNormalKeys: 2
-  requiredSpectralKeys: 2
-  door: {fileID: 898661590343455729}
-  player: {fileID: 0}
-  playerController: {fileID: 0}
-  keyControl: {fileID: 0}
-  keys: []
-  normalFilled: 0
-  spectralFilled: 0
---- !u!114 &2134234174423663979
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3227965890508331983}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 544ec96a697b78341845a5923e1ac91e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  normalBase: {fileID: -1250356456, guid: 6ee34ec447843e84081e42af113da39b, type: 3}
-  spectralBase: {fileID: 299050613, guid: 0ac22c701dd5a47498f143a3f2324e60, type: 3}
-  normal: {fileID: 21300000, guid: 0376aa80c3c976e448b737b1437ed8e1, type: 3}
-  spectral: {fileID: 21300000, guid: 29fca6b468a5f6643a8cb1c917a7267e, type: 3}
-  inactive: {fileID: 21300000, guid: 83341807f4d5a854884a7280fd3fdcda, type: 3}
-  tinyNormal: {fileID: 21300000, guid: c0b04c840ba474f4581745757433761d, type: 3}
-  tinySpectral: {fileID: 21300000, guid: ca52800052d7f414c8da5f47871f2188, type: 3}
-  tinyInactive: {fileID: 21300000, guid: 9d6a35aa87884c240ab3513cb1a1747d, type: 3}
-  keyDisplay:
-  - {fileID: 6317108231614988261}
-  - {fileID: 5403455212471365684}
-  - {fileID: 2196531859918670700}
-  - {fileID: 7592493714045986841}
-  tinyKeyDisplay:
-  - {fileID: 7651404550967226388}
-  - {fileID: 5901805946937743694}
-  - {fileID: 3074961903817094335}
-  - {fileID: 3677750737073320737}
-  spriteRenderer: {fileID: 2064413914494249020}
-  roomManager: {fileID: 0}
-  doorControl: {fileID: 2460854691240258346}
 --- !u!61 &2127632760054175193
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -555,6 +501,62 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.9375, y: 1.9375}
   m_EdgeRadius: 0
+--- !u!114 &2460854691240258346
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3227965890508331983}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03fadcf306f177c4bbe161cffa47cf7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  requiredNormalKeys: 2
+  requiredSpectralKeys: 2
+  door: {fileID: 898661590343455729}
+  player: {fileID: 0}
+  key: {fileID: 0}
+  playerController: {fileID: 0}
+  keyControl: {fileID: 0}
+  roomManager: {fileID: 0}
+  keys: []
+  normalFilled: 0
+  spectralFilled: 0
+--- !u!114 &2134234174423663979
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3227965890508331983}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 544ec96a697b78341845a5923e1ac91e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  normalBase: {fileID: -1250356456, guid: 6ee34ec447843e84081e42af113da39b, type: 3}
+  spectralBase: {fileID: 299050613, guid: 0ac22c701dd5a47498f143a3f2324e60, type: 3}
+  normal: {fileID: 21300000, guid: 0376aa80c3c976e448b737b1437ed8e1, type: 3}
+  spectral: {fileID: 21300000, guid: 29fca6b468a5f6643a8cb1c917a7267e, type: 3}
+  inactive: {fileID: 21300000, guid: 83341807f4d5a854884a7280fd3fdcda, type: 3}
+  tinyNormal: {fileID: 21300000, guid: c0b04c840ba474f4581745757433761d, type: 3}
+  tinySpectral: {fileID: 21300000, guid: ca52800052d7f414c8da5f47871f2188, type: 3}
+  tinyInactive: {fileID: 21300000, guid: 9d6a35aa87884c240ab3513cb1a1747d, type: 3}
+  keyDisplay:
+  - {fileID: 6317108231614988261}
+  - {fileID: 5403455212471365684}
+  - {fileID: 2196531859918670700}
+  - {fileID: 7592493714045986841}
+  tinyKeyDisplay:
+  - {fileID: 7651404550967226388}
+  - {fileID: 5901805946937743694}
+  - {fileID: 3074961903817094335}
+  - {fileID: 3677750737073320737}
+  spriteRenderer: {fileID: 2064413914494249020}
+  roomManager: {fileID: 0}
+  doorControl: {fileID: 2460854691240258346}
 --- !u!1 &3677750737073320737
 GameObject:
   m_ObjectHideFlags: 0

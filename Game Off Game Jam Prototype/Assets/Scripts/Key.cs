@@ -25,12 +25,7 @@ public class Key : MonoBehaviour
             follow.player = collision.transform;
             isFollowing = true;
         }
-        if(collision.CompareTag("Key Pedestal"))
-        {
-            deposited = true;
-            isFollowing = false;
-            
-        }
+        
     }
 
 

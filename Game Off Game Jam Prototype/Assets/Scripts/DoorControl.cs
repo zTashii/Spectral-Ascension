@@ -73,8 +73,12 @@ public class DoorControl : MonoBehaviour
     }
     IEnumerator Wait(GameObject obj)
     {
-        yield return new WaitForSeconds(1.2f);
-        obj.SetActive(false);
+        //yield return new WaitForSeconds(1.2f);
+        if (obj.transform.position == this.transform.position)
+        {
+            yield return new WaitForSeconds(1.1f);
+            obj.SetActive(false);
+        }
     }
 
     public void MoveKeys()
@@ -106,7 +110,11 @@ public class DoorControl : MonoBehaviour
         }
         for (int i = 0; i < keys.Count; i++)
         {
-            keys[i].transform.position = Vector2.Lerp(keys[i].transform.position, transform.position, Time.deltaTime * 5);
+            keys[i].GetComponent<Key>().isFollowing = false;
+            keys[i].GetComponent<Key>().deposited = true;
+            //keys[i].transform.position = Vector2.Lerp(keys[i].transform.position, transform.position, Time.deltaTime * 5);
+            keys[i].transform.position = Vector2.MoveTowards(keys[i].transform.position, transform.position, 6 * Time.deltaTime);
+            
             StartCoroutine(Wait(keys[i].gameObject));
         }
     }
@@ -118,6 +126,10 @@ public class DoorControl : MonoBehaviour
             player = collision.gameObject;
             
             
+        }
+        if (collision.CompareTag("Key"))
+        {
+            Debug.Log("Collided 2");
         }
         
     }

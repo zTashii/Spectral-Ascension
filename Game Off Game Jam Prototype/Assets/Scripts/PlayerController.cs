@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class PlayerController : MonoBehaviour
 {
     //bool or states
@@ -34,7 +35,7 @@ public class PlayerController : MonoBehaviour
     private Vector2 ghostDirection;
 
     public PlayerStates playerState;
-
+    [SerializeField]
     private Collider2D col2D;
     public LayerMask groundMask;
 
@@ -46,6 +47,9 @@ public class PlayerController : MonoBehaviour
 
     public Collider2D spectralAnchors;
     public GameObject interactableSpectralAnchor;
+
+    public Animator animator;
+
     public static PlayerController instance
     {
         get
@@ -86,6 +90,7 @@ public class PlayerController : MonoBehaviour
     }
     private void Start()
     {
+        animator = GetComponent<Animator>();
         SetupReferences();
         movement = Vector2.zero;
         //anchorPosition = transform.position;
@@ -93,18 +98,21 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         movement = UserInput.instance.moveInput;
-        if(this.movement.x > 0f && !this.playerState.facingRight)
-        {
-            this.FlipSprite();
-        }
-        if(this.movement.x < 0f && this.playerState.facingRight)
-        {
-            this.FlipSprite();
-        }
+        
         if (this.playerState.canMove)
         {
+            animator.SetFloat("xVelocity", Mathf.Abs(this.rBody.velocity.x));
+            
             //this.playerState.isGhost = false;
             Move(movement.x);
+            if (this.movement.x > 0f && !this.playerState.facingRight)
+            {
+                this.FlipSprite();
+            }
+            if (this.movement.x < 0f && this.playerState.facingRight)
+            {
+                this.FlipSprite();
+            }
         }
     }
 
@@ -123,6 +131,7 @@ public class PlayerController : MonoBehaviour
     {
         if (this.playerState.isGhost)
         {
+            animator.SetBool("isGhost", this.playerState.isGhost);
             this.playerState.canMove = false;
             GetMousePos();
             movement = Vector2.zero;
@@ -130,6 +139,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
+            animator.SetBool("isGhost", this.playerState.isGhost);
             this.rBody.bodyType = RigidbodyType2D.Dynamic;
             //this.playerState.canMove = true;
             Jump();
@@ -180,12 +190,18 @@ public class PlayerController : MonoBehaviour
             {
                 this.rBody.velocity = new Vector2(this.rBody.velocity.x, this.jumpVelocity);
             }
-            if (this.playerState.wallSliding)
+            if (this.playerState.wallSliding || this.playerState.wallClimbing)
             {
                 this.playerState.wallJumping = true;
+                this.playerState.wallSliding = false;
+                this.playerState.wallClimbing = false;
                 this.playerState.canMove = false;
-                this.rBody.velocity = new Vector2(this.wallJumpVelocity.x * -direction, this.wallJumpVelocity.y);
                 
+                this.rBody.velocity = Vector2.zero;
+                this.rBody.velocity = new Vector2(this.wallJumpVelocity.x * -direction, this.wallJumpVelocity.y);
+                this.FlipSprite();
+                StartCoroutine(JumpWait());
+
             }
            
         }
@@ -215,7 +231,11 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-
+    IEnumerator JumpWait()
+    {
+        yield return new WaitForSeconds(0.5f);
+        this.playerState.canMove = true;
+    }
     IEnumerator DashWait()
     {
         
@@ -235,7 +255,7 @@ public class PlayerController : MonoBehaviour
     {
         if (this.playerState.onWall && !this.playerState.onGround)
         {
-            if (movement.x != 0 && !this.playerState.wallClimbing)
+            if (movement.x != 0 && !this.playerState.wallClimbing && !this.playerState.wallJumping)
             {
                 this.playerState.wallSliding = true;
                 this.rBody.velocity = new Vector2(this.rBody.velocity.x, -slideSpeed);
@@ -259,8 +279,9 @@ public class PlayerController : MonoBehaviour
         
         if (this.playerState.wallJumping)
         {
-            
+
             this.rBody.velocity = Vector2.Lerp(this.rBody.velocity, (new Vector2(movement.x * moveSpeed, this.rBody.velocity.y)), wallJumpLerp * Time.deltaTime);
+            this.playerState.wallJumping = false;
         }
     }
 
@@ -305,7 +326,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             this.playerState.onWall = false;
-            this.playerState.wallJumping = false;
+            //this.playerState.wallJumping = false;
             this.playerState.wallSliding = false;
             this.playerState.wallClimbing = false;
         }

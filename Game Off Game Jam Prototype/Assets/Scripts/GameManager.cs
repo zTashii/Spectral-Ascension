@@ -5,7 +5,6 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public static GameManager _instance;
-
     public static GameManager instance
     {
         get
@@ -43,6 +42,7 @@ public class GameManager : MonoBehaviour
             }
         }
     }
+
 
 }
 
