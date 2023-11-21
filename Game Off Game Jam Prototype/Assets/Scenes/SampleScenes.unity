@@ -207,12 +207,24 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 90041515022490323, guid: ac47f54afee9d2d41a9e869e1c6d5375, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -1.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 90041515022490323, guid: ac47f54afee9d2d41a9e869e1c6d5375, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 575449785776417587, guid: ac47f54afee9d2d41a9e869e1c6d5375, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2127632760054175193, guid: ac47f54afee9d2d41a9e869e1c6d5375, type: 3}
+      propertyPath: m_Size.x
+      value: 3.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2127632760054175193, guid: ac47f54afee9d2d41a9e869e1c6d5375, type: 3}
+      propertyPath: m_Size.y
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 2134234174423663979, guid: ac47f54afee9d2d41a9e869e1c6d5375, type: 3}
       propertyPath: roomManager
@@ -230,6 +242,14 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Pedestal
       objectReference: {fileID: 0}
+    - target: {fileID: 4919337768512932522, guid: ac47f54afee9d2d41a9e869e1c6d5375, type: 3}
+      propertyPath: locked
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4919337768512932522, guid: ac47f54afee9d2d41a9e869e1c6d5375, type: 3}
+      propertyPath: canFling
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5403455212471365684, guid: ac47f54afee9d2d41a9e869e1c6d5375, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -237,6 +257,22 @@ PrefabInstance:
     - target: {fileID: 5901805946937743694, guid: ac47f54afee9d2d41a9e869e1c6d5375, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7673854320757592638, guid: ac47f54afee9d2d41a9e869e1c6d5375, type: 3}
+      propertyPath: m_Size.x
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7673854320757592638, guid: ac47f54afee9d2d41a9e869e1c6d5375, type: 3}
+      propertyPath: m_Size.y
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7673854320757592638, guid: ac47f54afee9d2d41a9e869e1c6d5375, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 990132314, guid: 30bb288f176be2a4da41d6593d54b927, type: 3}
+    - target: {fileID: 7673854320757592638, guid: ac47f54afee9d2d41a9e869e1c6d5375, type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8532312541610046892, guid: ac47f54afee9d2d41a9e869e1c6d5375, type: 3}
       propertyPath: m_LocalPosition.x
@@ -329,7 +365,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   interactIcon: {fileID: 1112745474}
-  roomManager: {fileID: 0}
+  locked: 0
 --- !u!58 &227821718
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -8999,6 +9035,7 @@ MonoBehaviour:
   wallJumpLerp: 10
   wallJumpVelocity: {x: 10, y: 20}
   wallDirX: 0
+  previousGravityScale: 0
   curve:
     serializedVersion: 2
     m_Curve:
@@ -9030,6 +9067,7 @@ MonoBehaviour:
     onGround: 0
     onWall: 0
     isGhost: 0
+    canFling: 0
     canMove: 0
     canJump: 0
     canDash: 0
@@ -9037,6 +9075,7 @@ MonoBehaviour:
     isDashing: 0
     hasDashed: 0
     wallClimbing: 0
+    wallGrip: 0
     wallJumping: 0
     wallSliding: 0
   col2D: {fileID: 0}

@@ -5,11 +5,9 @@ using UnityEngine;
 public class SpectreInteractable : InteractableBase
 {
     private PlayerController playerController;
-    [SerializeField]
-    private RoomManager roomManager;
+    public bool locked;
     private void Start()
     {
-        this.roomManager = GetComponentInParent<RoomManager>();
         this.playerController = PlayerController.instance;
     }
     public override void Interact()

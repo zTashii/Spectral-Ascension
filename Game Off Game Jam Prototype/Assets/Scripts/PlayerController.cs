@@ -22,7 +22,7 @@ public class PlayerController : MonoBehaviour
     public Vector2 wallJumpVelocity;
     public int wallDirX;
 
-    Vector2 velocity;
+    public float previousGravityScale;
 
     public AnimationCurve curve;
     //public AnimationCurve gravity;
@@ -93,6 +93,7 @@ public class PlayerController : MonoBehaviour
         animator = GetComponent<Animator>();
         SetupReferences();
         movement = Vector2.zero;
+        this.playerState.canFling = true;
         //anchorPosition = transform.position;
     }
     private void FixedUpdate()
@@ -105,6 +106,8 @@ public class PlayerController : MonoBehaviour
             
             //this.playerState.isGhost = false;
             Move(movement.x);
+            if (this.playerState.wallGrip)
+                return;
             if (this.movement.x > 0f && !this.playerState.facingRight)
             {
                 this.FlipSprite();
@@ -147,6 +150,12 @@ public class PlayerController : MonoBehaviour
             WallSlide();
             WallClimb();
             WallJump();
+
+            animator.SetBool("isWallSliding", this.playerState.wallSliding);
+            animator.SetBool("isClimbing", this.playerState.wallClimbing);
+            animator.SetBool("isGrippingWall", this.playerState.wallGrip);
+            animator.SetFloat("yVelocity", movement.y);
+
         }
         CheckOnGround();
         CheckOnWall();
@@ -156,7 +165,14 @@ public class PlayerController : MonoBehaviour
 
     public void Move(float direction)
     {
-        this.rBody.velocity = new Vector2(direction * moveSpeed, this.rBody.velocity.y);
+        if (this.playerState.wallGrip)
+            return;
+        if (!this.playerState.wallJumping)
+            this.rBody.velocity = new Vector2(direction * moveSpeed, this.rBody.velocity.y);
+        else
+        {
+
+        }
     }
     public void FlipSprite()
     {
@@ -190,20 +206,28 @@ public class PlayerController : MonoBehaviour
             {
                 this.rBody.velocity = new Vector2(this.rBody.velocity.x, this.jumpVelocity);
             }
-            if (this.playerState.wallSliding || this.playerState.wallClimbing)
+            //if (this.playerState.wallSliding || this.playerState.wallClimbing)
+            //{
+            //    this.playerState.wallJumping = true;
+            //    this.playerState.wallSliding = false;
+            //    this.playerState.wallClimbing = false;
+            //    this.playerState.canMove = false;
+
+            //    this.rBody.velocity = Vector2.zero;
+            //    this.rBody.velocity = new Vector2(this.wallJumpVelocity.x * -direction, this.wallJumpVelocity.y);
+            //    this.FlipSprite();
+            //    StartCoroutine(JumpWait());
+
+            //}
+            if (this.playerState.onWall && !this.playerState.onGround)
             {
+                StartCoroutine(JumpWait(0.1f));
                 this.playerState.wallJumping = true;
-                this.playerState.wallSliding = false;
-                this.playerState.wallClimbing = false;
-                this.playerState.canMove = false;
-                
-                this.rBody.velocity = Vector2.zero;
                 this.rBody.velocity = new Vector2(this.wallJumpVelocity.x * -direction, this.wallJumpVelocity.y);
                 this.FlipSprite();
-                StartCoroutine(JumpWait());
-
+                
             }
-           
+
         }
         if (this.rBody.velocity.y < 0)
         {
@@ -231,9 +255,10 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-    IEnumerator JumpWait()
+    IEnumerator JumpWait(float time)
     {
-        yield return new WaitForSeconds(0.5f);
+        this.playerState.canMove = false;
+        yield return new WaitForSeconds(time);
         this.playerState.canMove = true;
     }
     IEnumerator DashWait()
@@ -253,35 +278,74 @@ public class PlayerController : MonoBehaviour
     }
     public void WallSlide()
     {
+        if (!this.playerState.canMove)
+            return;
         if (this.playerState.onWall && !this.playerState.onGround)
         {
-            if (movement.x != 0 && !this.playerState.wallClimbing && !this.playerState.wallJumping)
+
+            if (movement.x != 0 && !this.playerState.wallGrip)
             {
+                
                 this.playerState.wallSliding = true;
                 this.rBody.velocity = new Vector2(this.rBody.velocity.x, -slideSpeed);
             }
         }
+        else if(this.playerState.onWall && this.playerState.onGround)
+        {
+            this.playerState.wallSliding = false;
+        }
     }
     public void WallClimb()
     {
-        if(this.playerState.onWall && UserInput.instance.controls.Player.Grip.ReadValue<float>() > 0.1f)
+        if (this.playerState.onWall && UserInput.instance.controls.Player.Grip.ReadValue<float>() > 0.1f)
         {
-            this.playerState.wallClimbing = true;
-            this.rBody.velocity = new Vector2(this.rBody.velocity.x, movement.y * climbSpeed);
+            this.playerState.wallGrip = true;
+            this.playerState.wallSliding = false;
+     
+
+        }
+        else if (!this.playerState.onWall || UserInput.instance.controls.Player.Grip.WasReleasedThisFrame())
+        {
+            this.playerState.wallSliding = false;
+            this.playerState.wallGrip = false;
+            
+        }
+        
+        if (this.playerState.wallGrip && !this.playerState.wallJumping)
+        {
+            AffectedByGravity(false);
+            this.rBody.velocity = new(this.rBody.velocity.x, 0f);
         }
         else
         {
-            this.playerState.wallClimbing = false;
+            AffectedByGravity(true);
+        }
+        if (this.playerState.wallGrip && this.movement.y != 0f)
+        {
+            this.playerState.wallClimbing = true;
+            this.rBody.velocity = new Vector2(0f, movement.y * climbSpeed);
+
+        }
+    }
+    public void AffectedByGravity(bool value)
+    {
+        float gravityScale = this.rBody.gravityScale;
+        if (this.rBody.gravityScale > Mathf.Epsilon && !value)
+        {
+            this.previousGravityScale = this.rBody.gravityScale;
+            this.rBody.gravityScale = 0f;
+        }
+        else if (this.rBody.gravityScale <= Mathf.Epsilon && value)
+        {
+            this.rBody.gravityScale = this.previousGravityScale;
+            this.previousGravityScale = 0f;
         }
     }
     public void WallJump()
     {
-        
         if (this.playerState.wallJumping)
         {
-
             this.rBody.velocity = Vector2.Lerp(this.rBody.velocity, (new Vector2(movement.x * moveSpeed, this.rBody.velocity.y)), wallJumpLerp * Time.deltaTime);
-            this.playerState.wallJumping = false;
         }
     }
 
@@ -292,6 +356,7 @@ public class PlayerController : MonoBehaviour
             this.playerState.onGround = true;
             this.playerState.hasDashed = false;
             //this.playerState.isGhost = false;
+            this.playerState.wallJumping = false;
             this.playerState.canDash = false;
             this.playerState.canJump = true;
             this.playerState.canMove = true;
@@ -326,6 +391,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             this.playerState.onWall = false;
+            this.playerState.wallGrip = false;
             //this.playerState.wallJumping = false;
             this.playerState.wallSliding = false;
             this.playerState.wallClimbing = false;
@@ -344,7 +410,7 @@ public class PlayerController : MonoBehaviour
     #region Mouse
     private void OnMouseDrag()
     {
-        if (this.playerState.isGhost)
+        if (this.playerState.isGhost && this.playerState.canFling)
         {
             float pull = Vector2.Distance(worldMousePos, mouseDownPos);
             normalizedPull = Mathf.Clamp(Helpers.Map(pull, 0, maxPull, 0, 1), 0, 1);
@@ -354,14 +420,14 @@ public class PlayerController : MonoBehaviour
     }
     private void OnMouseDown()
     {
-        if (this.playerState.isGhost)
+        if (this.playerState.isGhost && this.playerState.canFling)
         {
             mouseDownPos = GetMouse();
         }
     }
     private void OnMouseUp()
     {
-        if (this.playerState.isGhost)
+        if (this.playerState.isGhost && this.playerState.canFling)
         {
             rBody.bodyType = RigidbodyType2D.Dynamic;
             rBody.velocity = maxSpeed * normalizedPull * -ghostDirection;
@@ -384,7 +450,7 @@ public class PlayerController : MonoBehaviour
 
     public IEnumerator MoveTo(Vector3 targetPosition, float linearSpeed)
     {
-        yield return new WaitForSeconds(0.1f);
+        //yield return new WaitForSeconds(0.1f);
         
         this.rBody.velocity = Vector2.zero;
         while (this.gameObject.transform.position != targetPosition)
@@ -411,6 +477,11 @@ public class PlayerController : MonoBehaviour
         if (collision.CompareTag("Anchor"))
         {
             spectralAnchors = collision;
+            if(spectralAnchors.gameObject.GetComponentInChildren<SpectreInteractable>())
+            { 
+                this.playerState.canFling = !spectralAnchors.gameObject.GetComponentInChildren<SpectreInteractable>().locked;
+
+            }
             //this.movement = Vector2.zero;
             //this.playerState.isGhost = true;
             if (this.playerState.isGhost)
@@ -443,7 +514,6 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.CompareTag("Anchor"))
         {
-            //spectralAnchors = null;
             this.anchorPosition = Vector2.zero;
 
 

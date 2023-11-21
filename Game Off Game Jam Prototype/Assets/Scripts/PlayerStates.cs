@@ -9,6 +9,7 @@ public class PlayerStates
     public bool onGround;
     public bool onWall;
     public bool isGhost;
+    public bool canFling;
     public bool canMove;
     public bool canJump;
     public bool canDash;
@@ -16,6 +17,7 @@ public class PlayerStates
     public bool isDashing;
     public bool hasDashed;
     public bool wallClimbing;
+    public bool wallGrip;
     public bool wallJumping;
     public bool wallSliding;
 
@@ -63,6 +65,7 @@ public class PlayerStates
         this.onGround = false;
         this.onWall = false;
         this.isGhost = false;
+        this.canFling = false;
         this.canMove = false;
         this.canJump = false;
         this.canDash = false;
@@ -70,6 +73,7 @@ public class PlayerStates
         this.isDashing = false;
         this.hasDashed = false;
         this.wallClimbing = false;
+        this.wallGrip = false;
         this.wallJumping = false;
         this.wallSliding = false;
     }
