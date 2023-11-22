@@ -7,8 +7,8 @@ public class KeyControl : MonoBehaviour
 
    
     public GameObject player;
-    public List<Key> key; 
-
+    public List<Key> key;
+    public Collider2D[] colList;
     public PlayerController playerController;
     //Follow Target Variables;
     [SerializeField] private List<Vector3> storedPositions;
@@ -20,6 +20,7 @@ public class KeyControl : MonoBehaviour
     {
         player = this.gameObject;
         playerController = GetComponent<PlayerController>();
+       
 
     }
     private void Update()
@@ -55,11 +56,15 @@ public class KeyControl : MonoBehaviour
     }
     void IgnoreCol()
     {
-
-        foreach (Key key in key)
+        for (int i = 0; i < GetComponents<Collider2D>().Length; i++)
         {
-            Physics2D.IgnoreCollision(key.GetComponent<Collider2D>(), this.gameObject.GetComponent<Collider2D>());
+            foreach (Key key in key)
+            {
+                Physics2D.IgnoreCollision(key.GetComponent<Collider2D>(), this.gameObject.GetComponents<Collider2D>()[i]);
+            }
         }
+
+        
     }
 
 

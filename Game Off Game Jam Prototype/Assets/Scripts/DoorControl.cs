@@ -80,6 +80,14 @@ public class DoorControl : MonoBehaviour
             obj.SetActive(false);
         }
     }
+    IEnumerator Move(GameObject obj)
+    { 
+        while(obj.transform.position != transform.position)
+        {
+            obj.transform.position = Vector2.MoveTowards(obj.transform.position, transform.position, 0.3f * Time.deltaTime);
+            yield return null;
+        }
+    }
 
     public void MoveKeys()
     {
@@ -114,7 +122,7 @@ public class DoorControl : MonoBehaviour
             keys[i].GetComponent<Key>().deposited = true;
             //keys[i].transform.position = Vector2.Lerp(keys[i].transform.position, transform.position, Time.deltaTime * 5);
             keys[i].transform.position = Vector2.MoveTowards(keys[i].transform.position, transform.position, 6 * Time.deltaTime);
-            
+            StartCoroutine(Move(keys[i].gameObject));
             StartCoroutine(Wait(keys[i].gameObject));
         }
     }

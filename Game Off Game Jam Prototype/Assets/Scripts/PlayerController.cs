@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour
     private Vector2 anchorPosition;
 
     public Rigidbody2D rBody;
+
     public float moveSpeed;
     public float jumpVelocity;
     public float slideSpeed;
@@ -21,6 +22,7 @@ public class PlayerController : MonoBehaviour
     public float wallJumpLerp;
     public Vector2 wallJumpVelocity;
     public int wallDirX;
+    Vector2 velocity;
 
     public float previousGravityScale;
 
@@ -29,14 +31,17 @@ public class PlayerController : MonoBehaviour
     private GameManager gameManager;
     public float maxPull;
 
+    public float minSpeed;
     public float maxSpeed;
-
+    public float pull;
     private float normalizedPull;
     private Vector2 ghostDirection;
 
     public PlayerStates playerState;
     [SerializeField]
-    private Collider2D col2D;
+    private CapsuleCollider2D capsuleCol2D;
+    [SerializeField]
+    private CircleCollider2D circleCol2D;
     public LayerMask groundMask;
 
     private Vector2 worldMousePos;
@@ -45,7 +50,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private float raycastLength;
 
-    public Collider2D spectralAnchors;
+    public GameObject spectralAnchors;
     public GameObject interactableSpectralAnchor;
 
     public Animator animator;
@@ -126,7 +131,8 @@ public class PlayerController : MonoBehaviour
             this.playerState = new PlayerStates();
         }
         this.rBody = base.GetComponent<Rigidbody2D>();
-        this.col2D = base.GetComponent<Collider2D>();
+        this.capsuleCol2D = base.GetComponent<CapsuleCollider2D>();
+        this.circleCol2D = base.GetComponent<CircleCollider2D>();
     }
 
 
@@ -134,6 +140,8 @@ public class PlayerController : MonoBehaviour
     {
         if (this.playerState.isGhost)
         {
+            this.capsuleCol2D.enabled = false;
+            this.circleCol2D.enabled = true;
             animator.SetBool("isGhost", this.playerState.isGhost);
             this.playerState.canMove = false;
             GetMousePos();
@@ -142,6 +150,8 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
+            this.capsuleCol2D.enabled = true;
+            this.circleCol2D.enabled = false;
             animator.SetBool("isGhost", this.playerState.isGhost);
             this.rBody.bodyType = RigidbodyType2D.Dynamic;
             //this.playerState.canMove = true;
@@ -159,8 +169,6 @@ public class PlayerController : MonoBehaviour
         }
         CheckOnGround();
         CheckOnWall();
-        
-        
     }
 
     public void Move(float direction)
@@ -276,6 +284,8 @@ public class PlayerController : MonoBehaviour
         this.playerState.canMove = true;
 
     }
+ 
+
     public void WallSlide()
     {
         if (!this.playerState.canMove)
@@ -369,10 +379,10 @@ public class PlayerController : MonoBehaviour
     }
     public bool CheckForGround()
     {
-        Vector2 vector = new Vector2(this.col2D.bounds.min.x, this.col2D.bounds.center.y);
-        Vector2 vector2 = this.col2D.bounds.center;
-        Vector2 vector3 = new Vector2(this.col2D.bounds.max.x, this.col2D.bounds.center.y);
-        float distance = this.col2D.bounds.extents.y + 0.16f;
+        Vector2 vector = new Vector2(this.capsuleCol2D.bounds.min.x, this.capsuleCol2D.bounds.center.y);
+        Vector2 vector2 = this.capsuleCol2D.bounds.center;
+        Vector2 vector3 = new Vector2(this.capsuleCol2D.bounds.max.x, this.capsuleCol2D.bounds.center.y);
+        float distance = this.capsuleCol2D.bounds.extents.y + 0.16f;
         UnityEngine.Debug.DrawRay(vector, Vector2.down * distance, Color.yellow);
         UnityEngine.Debug.DrawRay(vector2, Vector2.down * distance, Color.yellow);
         UnityEngine.Debug.DrawRay(vector3, Vector2.down * distance, Color.yellow);
@@ -399,20 +409,23 @@ public class PlayerController : MonoBehaviour
     }
     public bool CheckForWall()
     {
-        Vector2 vector = this.col2D.bounds.center;
+        Vector2 vector = this.capsuleCol2D.bounds.center;
         UnityEngine.Debug.DrawRay(vector, Vector2.right * raycastLength * direction, Color.yellow);
         RaycastHit2D wallCollider = Physics2D.Raycast(vector, Vector2.right, raycastLength * direction, groundMask);
         return wallCollider.collider != null;
     }
 
 
-
+    /// <summary>
+    /// Mouse Functions
+    /// </summary>
+    
     #region Mouse
     private void OnMouseDrag()
     {
         if (this.playerState.isGhost && this.playerState.canFling)
         {
-            float pull = Vector2.Distance(worldMousePos, mouseDownPos);
+            pull = Vector2.Distance(worldMousePos, mouseDownPos);
             normalizedPull = Mathf.Clamp(Helpers.Map(pull, 0, maxPull, 0, 1), 0, 1);
             ghostDirection = (worldMousePos - mouseDownPos).normalized;
             transform.position = anchorPosition + (ghostDirection * curve.Evaluate(normalizedPull) * maxPull);
@@ -430,8 +443,9 @@ public class PlayerController : MonoBehaviour
         if (this.playerState.isGhost && this.playerState.canFling)
         {
             rBody.bodyType = RigidbodyType2D.Dynamic;
-            rBody.velocity = maxSpeed * normalizedPull * -ghostDirection;
-            
+            //rBody.velocity = maxSpeed * normalizedPull * -ghostDirection;
+            this.rBody.velocity = -ghostDirection * Helpers.Map(normalizedPull, 0, 1, minSpeed, maxSpeed);
+            pull = 0;
         }
     }
     private void GetMousePos()
@@ -450,25 +464,36 @@ public class PlayerController : MonoBehaviour
 
     public IEnumerator MoveTo(Vector3 targetPosition, float linearSpeed)
     {
-        //yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(0.1f);
         
         this.rBody.velocity = Vector2.zero;
+        //Vector3 tPos = new Vector3(Mathf.Round(targetPosition.x), Mathf.Round(targetPosition.y), 0f);
+        //Vector3 pPos = new Vector3(Mathf.Round(this.gameObject.transform.position.x), Mathf.Round(this.gameObject.transform.position.y), 0f);
         while (this.gameObject.transform.position != targetPosition)
         {
-            this.gameObject.transform.position = Vector2.MoveTowards(this.gameObject.transform.position, targetPosition, linearSpeed * Time.deltaTime);
+            this.gameObject.transform.position = Vector3.MoveTowards(this.gameObject.transform.position, targetPosition, linearSpeed * Time.deltaTime);
             //this.gameObject.transform.position = Vector2.SmoothDamp(transform.position, targetPosition, ref velocity, 0.5f);
+
             yield return null;
-            
+
         }
+        
+        
+
         this.gameObject.transform.position = targetPosition;
         this.anchorPosition = this.transform.position;
 
+
     }
+
+    
 
     public void MoveToAnchors()
     {
+        
         StartCoroutine(MoveTo(spectralAnchors.transform.position, maxSpeed));
         this.rBody.bodyType = RigidbodyType2D.Kinematic;
+        
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -476,24 +501,20 @@ public class PlayerController : MonoBehaviour
 
         if (collision.CompareTag("Anchor"))
         {
-            spectralAnchors = collision;
-            if(spectralAnchors.gameObject.GetComponentInChildren<SpectreInteractable>())
+            spectralAnchors = collision.gameObject;
+            if(spectralAnchors.GetComponentInChildren<SpectreInteractable>())
             { 
-                this.playerState.canFling = !spectralAnchors.gameObject.GetComponentInChildren<SpectreInteractable>().locked;
+                this.playerState.canFling = !spectralAnchors.GetComponentInChildren<SpectreInteractable>().locked;
 
             }
             //this.movement = Vector2.zero;
             //this.playerState.isGhost = true;
             if (this.playerState.isGhost)
             {
-                this.playerState.canMove = false;
                 MoveToAnchors();
                 //transform.position = collision.transform.position;
                 //this.rBody.bodyType = RigidbodyType2D.Kinematic;
                 //this.anchorPosition = transform.position;
-                //StartCoroutine(MoveTo(collision.transform.position, maxSpeed));
-
-
                 //rBody.velocity = Vector2.zero;
             }
         }
