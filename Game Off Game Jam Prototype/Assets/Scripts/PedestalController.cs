@@ -4,9 +4,8 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class PedestalController : MonoBehaviour
 {
-    public Sprite normalBase;
-    public Sprite spectralBase;
-
+    public Sprite spriteBase;
+    public Animator animator;
     public Sprite normal;
     public Sprite spectral;
     public Sprite inactive;
@@ -27,12 +26,15 @@ public class PedestalController : MonoBehaviour
         doorControl = GetComponent<DoorControl>();
         roomManager = FindAnyObjectByType<RoomManager>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        animator = GetComponent<Animator>();
+        
     }
 
     private void Update()
     {
         CheckRoomState();
         UpdatePedestal();
+        
     }
 
 
@@ -40,12 +42,14 @@ public class PedestalController : MonoBehaviour
     {
         if(roomManager.roomType == RoomManager.RoomType.NormalRoom)
         {
-            spriteRenderer.sprite = normalBase;
+            spriteRenderer.sprite = spriteBase;
+            animator.SetTrigger("isNormal");
         }
         else if (roomManager.roomType == RoomManager.RoomType.SpectralRoom)
         {
-            spriteRenderer.sprite = spectralBase;
-        }
+            spriteRenderer.sprite = spriteBase;
+            animator.SetTrigger("isSpectral");
+            }
     }
 
     void UpdatePedestal()

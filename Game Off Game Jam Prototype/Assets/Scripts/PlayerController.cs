@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using Cinemachine;
 
 public class PlayerController : MonoBehaviour
 {
@@ -54,6 +54,14 @@ public class PlayerController : MonoBehaviour
     public GameObject interactableSpectralAnchor;
 
     public Animator animator;
+    public GameObject fader;
+    public Animator faderAnimator;
+    public bool respawning;
+    public bool invulnerable;
+    private CinemachineImpulseSource impulseSource;
+
+    public bool inDialogue;
+
 
     public static PlayerController instance
     {
@@ -96,6 +104,8 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         animator = GetComponent<Animator>();
+        faderAnimator = fader.GetComponent<Animator>();
+        impulseSource = GetComponent<CinemachineImpulseSource>();
         SetupReferences();
         movement = Vector2.zero;
         this.playerState.canFling = true;
@@ -148,7 +158,7 @@ public class PlayerController : MonoBehaviour
             movement = Vector2.zero;
             
         }
-        else
+        else if(this.playerState.canMove)
         {
             this.capsuleCol2D.enabled = true;
             this.circleCol2D.enabled = false;
@@ -165,6 +175,11 @@ public class PlayerController : MonoBehaviour
             animator.SetBool("isClimbing", this.playerState.wallClimbing);
             animator.SetBool("isGrippingWall", this.playerState.wallGrip);
             animator.SetFloat("yVelocity", movement.y);
+
+        }
+        if(!this.playerState.canMove && !this.playerState.isGhost)
+        {
+            animator.SetFloat("xVelocity", 0);
 
         }
         CheckOnGround();
@@ -361,7 +376,7 @@ public class PlayerController : MonoBehaviour
 
     private void CheckOnGround()
     {
-        if (this.CheckForGround())
+        if (this.CheckForGround()&& !this.inDialogue)
         {
             this.playerState.onGround = true;
             this.playerState.hasDashed = false;
@@ -414,7 +429,36 @@ public class PlayerController : MonoBehaviour
         RaycastHit2D wallCollider = Physics2D.Raycast(vector, Vector2.right, raycastLength * direction, groundMask);
         return wallCollider.collider != null;
     }
+ 
+    public void Respawn()
+    {
+        //ienumerator wait
+        respawning = true;
+        CameraShakeManager.instance.CameraShake(impulseSource);
+        StartCoroutine(Fader());
+        StartCoroutine(RespawnPlayer());
+        
 
+    }
+    IEnumerator Fader()
+    {
+        faderAnimator.SetTrigger("FadeOut");
+        yield return new WaitForSeconds(1f);
+        faderAnimator.SetTrigger("FadeIn");
+    }
+
+    IEnumerator RespawnPlayer()
+    {
+        yield return new WaitForSeconds(1f);
+        this.rBody.velocity = Vector2.zero;
+        this.rBody.bodyType = RigidbodyType2D.Kinematic;
+        this.transform.position = this.interactableSpectralAnchor.transform.position;
+        this.anchorPosition = this.transform.position;
+        
+        yield return new WaitForSeconds(0.5f);
+        respawning = false;
+
+    }
 
     /// <summary>
     /// Mouse Functions
@@ -465,28 +509,23 @@ public class PlayerController : MonoBehaviour
     public IEnumerator MoveTo(Vector3 targetPosition, float linearSpeed)
     {
         yield return new WaitForSeconds(0.1f);
-        
+        invulnerable = false;
         this.rBody.velocity = Vector2.zero;
         //Vector3 tPos = new Vector3(Mathf.Round(targetPosition.x), Mathf.Round(targetPosition.y), 0f);
         //Vector3 pPos = new Vector3(Mathf.Round(this.gameObject.transform.position.x), Mathf.Round(this.gameObject.transform.position.y), 0f);
-        while (this.gameObject.transform.position != targetPosition)
+        if(this.gameObject.transform.position != targetPosition)
         {
             this.gameObject.transform.position = Vector3.MoveTowards(this.gameObject.transform.position, targetPosition, linearSpeed * Time.deltaTime);
             //this.gameObject.transform.position = Vector2.SmoothDamp(transform.position, targetPosition, ref velocity, 0.5f);
 
-            yield return null;
+        
 
         }
-        
-        
-
         this.gameObject.transform.position = targetPosition;
         this.anchorPosition = this.transform.position;
-
-
+        
     }
 
-    
 
     public void MoveToAnchors()
     {
@@ -501,6 +540,7 @@ public class PlayerController : MonoBehaviour
 
         if (collision.CompareTag("Anchor"))
         {
+            
             spectralAnchors = collision.gameObject;
             if(spectralAnchors.GetComponentInChildren<SpectreInteractable>())
             { 
@@ -509,8 +549,9 @@ public class PlayerController : MonoBehaviour
             }
             //this.movement = Vector2.zero;
             //this.playerState.isGhost = true;
-            if (this.playerState.isGhost)
+            if (this.playerState.isGhost && !respawning)
             {
+                invulnerable = true;
                 MoveToAnchors();
                 //transform.position = collision.transform.position;
                 //this.rBody.bodyType = RigidbodyType2D.Kinematic;
@@ -522,14 +563,17 @@ public class PlayerController : MonoBehaviour
         {
             this.rBody.velocity = maxSpeed * normalizedPull * -ghostDirection;
         }
-        if (collision.CompareTag("Death Mist"))
+        if (collision.CompareTag("Death Mist") && !this.invulnerable)
         {
             //StopAllCoroutines();
-            this.transform.position = this.interactableSpectralAnchor.transform.position;
+            //this.transform.position = this.interactableSpectralAnchor.transform.position;
+            
+            Respawn();
         }
        
 
     }
+
 
     private void OnTriggerExit2D(Collider2D collision)
     {

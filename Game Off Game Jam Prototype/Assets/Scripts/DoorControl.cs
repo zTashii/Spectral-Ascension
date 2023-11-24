@@ -127,6 +127,27 @@ public class DoorControl : MonoBehaviour
         }
     }
 
+    public void KeyHandler()
+    {
+        foreach(Key key in keyControl.key) { 
+            if(key.keyType == Key.KeyType.Normal && roomManager.roomType == RoomManager.RoomType.NormalRoom || key.keyType == Key.KeyType.Spectral && roomManager.roomType == RoomManager.RoomType.SpectralRoom)
+            {
+                keys.Add(key);
+                
+                key.gameObject.transform.SetParent(this.transform);
+                keyControl.key.Remove(key);
+            }
+        }
+        foreach(Key key in keys)
+        {
+            key.GetComponent<Key>().isFollowing = false;
+            key.GetComponent<Key>().deposited = true;
+            key.transform.position = Vector2.MoveTowards(key.transform.position, transform.position, 6 * Time.deltaTime);
+            StartCoroutine(Move(key.gameObject));
+            StartCoroutine(Wait(key.gameObject));
+        }
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))

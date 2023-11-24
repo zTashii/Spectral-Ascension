@@ -7,12 +7,17 @@ public class SpectreInteractable : InteractableBase
     private PlayerController playerController;
     public bool locked;
     public GameObject lockedImage;
+    public GameObject tutorial;
     private void Start()
     {
         this.playerController = PlayerController.instance;
         if (lockedImage)
         {
             lockedImage.SetActive(false);
+        }
+        if (tutorial)
+        {
+            tutorial.SetActive(false);
         }
     }
     public override void Interact()
@@ -56,10 +61,19 @@ public class SpectreInteractable : InteractableBase
             if (lockedImage && playerController.playerState.isGhost)
             {
                 lockedImage.SetActive(true);
+                
             }
             else if (lockedImage && !playerController.playerState.isGhost)
             {
                 lockedImage.SetActive(false);
+            }
+            if(tutorial && this.playerController.playerState.isGhost)
+            {
+                tutorial.SetActive(true);
+            }
+            else if(tutorial && !this.playerController.playerState.isGhost)
+            {
+                tutorial.SetActive(false);
             }
         }
     }
@@ -74,6 +88,10 @@ public class SpectreInteractable : InteractableBase
             //{
             //    lockedImage.SetActive(false);
             //}
+            if (tutorial)
+            {
+                tutorial.SetActive(false);
+            }
         }
     }
 

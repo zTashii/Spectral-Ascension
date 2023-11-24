@@ -11,8 +11,7 @@ public class KeyControl : MonoBehaviour
     public Collider2D[] colList;
     public PlayerController playerController;
     //Follow Target Variables;
-    [SerializeField] private List<Vector3> storedPositions;
-    [SerializeField] private int followDistance;
+
 
     public float speed;
 
