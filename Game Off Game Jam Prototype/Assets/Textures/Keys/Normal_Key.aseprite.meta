@@ -139,6 +139,66 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 4, y: 4}
+  - name: Normal_Key_Frame_1
+    originalName: 
+    pivot: {x: 0.5, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 31
+      width: 19
+      height: 19
+    spriteID: 0027ab53df4b4ae4b935ac61a1b65025
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 31}
+  - name: Normal_Key_Frame_2
+    originalName: 
+    pivot: {x: 0.5, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 31
+      y: 4
+      width: 19
+      height: 19
+    spriteID: 71d16ac9118cb7d49904a8f03a468855
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 31, y: 4}
+  - name: Normal_Key_Frame_3
+    originalName: 
+    pivot: {x: 0.5, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 31
+      y: 31
+      width: 19
+      height: 19
+    spriteID: 9faffbc6b252d0e47aef632e88122542
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 31, y: 31}
   spriteSheetImportData: []
   asepriteLayers:
   - layerIndex: 0
@@ -148,7 +208,7 @@ ScriptedImporter:
     layerType: 0
     blendMode: 0
     cells:
-    - name: Normal_Key
+    - name: Normal_Key_Frame_0
       frameIndex: 0
       cellRect:
         x: 0
@@ -156,6 +216,30 @@ ScriptedImporter:
         width: 19
         height: 19
       spriteId: 6992fc607e09306468ffcdaf744ef139
+    - name: Normal_Key_Frame_1
+      frameIndex: 1
+      cellRect:
+        x: 0
+        y: 0
+        width: 19
+        height: 19
+      spriteId: 0027ab53df4b4ae4b935ac61a1b65025
+    - name: Normal_Key_Frame_2
+      frameIndex: 2
+      cellRect:
+        x: 0
+        y: 0
+        width: 19
+        height: 19
+      spriteId: 71d16ac9118cb7d49904a8f03a468855
+    - name: Normal_Key_Frame_3
+      frameIndex: 3
+      cellRect:
+        x: 0
+        y: 0
+        width: 19
+        height: 19
+      spriteId: 9faffbc6b252d0e47aef632e88122542
     linkedCells: []
     parentIndex: -1
   platformSettings: []

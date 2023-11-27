@@ -43,13 +43,12 @@ public class PedestalController : MonoBehaviour
         if(roomManager.roomType == RoomManager.RoomType.NormalRoom)
         {
             spriteRenderer.sprite = spriteBase;
-            animator.SetTrigger("isNormal");
         }
         else if (roomManager.roomType == RoomManager.RoomType.SpectralRoom)
         {
             spriteRenderer.sprite = spriteBase;
-            animator.SetTrigger("isSpectral");
-            }
+            
+        }
     }
 
     void UpdatePedestal()

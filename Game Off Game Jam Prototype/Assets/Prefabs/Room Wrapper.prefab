@@ -9295,6 +9295,7 @@ MonoBehaviour:
   spectralRoom: {fileID: 5102098551545568610}
   normalRoom: {fileID: 8067648970666386813}
   playerController: {fileID: 0}
+  roomElements: []
 --- !u!1 &7248595914656052899
 GameObject:
   m_ObjectHideFlags: 0

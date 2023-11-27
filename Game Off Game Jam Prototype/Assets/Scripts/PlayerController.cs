@@ -182,6 +182,7 @@ public class PlayerController : MonoBehaviour
             animator.SetFloat("xVelocity", 0);
 
         }
+
         CheckOnGround();
         CheckOnWall();
     }

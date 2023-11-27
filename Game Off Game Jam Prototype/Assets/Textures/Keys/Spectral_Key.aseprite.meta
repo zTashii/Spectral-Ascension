@@ -139,6 +139,66 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 4, y: 4}
+  - name: Spectral_Key_Frame_1
+    originalName: 
+    pivot: {x: 0.5, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 31
+      width: 19
+      height: 19
+    spriteID: 2016b3b2fea7c694684432ce2db4d9ea
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 31}
+  - name: Spectral_Key_Frame_2
+    originalName: 
+    pivot: {x: 0.5, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 31
+      y: 4
+      width: 19
+      height: 19
+    spriteID: 7f020cf2c96fe904aa5fc71cd472e58d
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 31, y: 4}
+  - name: Spectral_Key_Frame_3
+    originalName: 
+    pivot: {x: 0.5, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 31
+      y: 31
+      width: 19
+      height: 19
+    spriteID: baae230e869e2d64dada3ec36a1516a2
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 31, y: 31}
   spriteSheetImportData: []
   asepriteLayers:
   - layerIndex: 0
@@ -148,7 +208,7 @@ ScriptedImporter:
     layerType: 0
     blendMode: 0
     cells:
-    - name: Spectral_Key
+    - name: Spectral_Key_Frame_0
       frameIndex: 0
       cellRect:
         x: 0
@@ -156,6 +216,30 @@ ScriptedImporter:
         width: 19
         height: 19
       spriteId: a1dd0bd2267627140b4dd9fce3e0cdfd
+    - name: Spectral_Key_Frame_1
+      frameIndex: 1
+      cellRect:
+        x: 0
+        y: 0
+        width: 19
+        height: 19
+      spriteId: 2016b3b2fea7c694684432ce2db4d9ea
+    - name: Spectral_Key_Frame_2
+      frameIndex: 2
+      cellRect:
+        x: 0
+        y: 0
+        width: 19
+        height: 19
+      spriteId: 7f020cf2c96fe904aa5fc71cd472e58d
+    - name: Spectral_Key_Frame_3
+      frameIndex: 3
+      cellRect:
+        x: 0
+        y: 0
+        width: 19
+        height: 19
+      spriteId: baae230e869e2d64dada3ec36a1516a2
     linkedCells: []
     parentIndex: -1
   platformSettings: []

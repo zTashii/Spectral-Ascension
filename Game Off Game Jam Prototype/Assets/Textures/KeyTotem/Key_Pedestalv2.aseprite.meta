@@ -121,15 +121,15 @@ ScriptedImporter:
   animatedSpriteImportData:
   - name: Key_Pedestalv2_Frame_0
     originalName: 
-    pivot: {x: 0.54545456, y: -2.3636365}
+    pivot: {x: 0.53333336, y: -0.6}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
       serializedVersion: 2
       x: 4
       y: 4
-      width: 11
-      height: 11
+      width: 30
+      height: 30
     spriteID: 0c38529808c957742a52dd8f5ac276bf
     spriteBone: []
     spriteOutline: []
@@ -141,15 +141,15 @@ ScriptedImporter:
     uvTransform: {x: 4, y: 4}
   - name: Key_Pedestalv2_Frame_1
     originalName: 
-    pivot: {x: 0.54545456, y: -2.3636365}
+    pivot: {x: 0.55172414, y: -0.7777778}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
       serializedVersion: 2
-      x: 4
-      y: 23
-      width: 11
-      height: 11
+      x: 42
+      y: 4
+      width: 29
+      height: 27
     spriteID: b720332b6a6731d43be0a08a1f0f7739
     spriteBone: []
     spriteOutline: []
@@ -158,18 +158,18 @@ ScriptedImporter:
     indices: 
     edges: []
     tessellationDetail: 0
-    uvTransform: {x: 4, y: 23}
+    uvTransform: {x: 42, y: 4}
   - name: Key_Pedestalv2_Frame_2
     originalName: 
-    pivot: {x: 0.54545456, y: -2.3636365}
+    pivot: {x: 0.5555556, y: -0.6551724}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
       serializedVersion: 2
-      x: 4
-      y: 42
-      width: 11
-      height: 11
+      x: 42
+      y: 39
+      width: 27
+      height: 29
     spriteID: 3b0a7c528df653c4c92fe69d2212e97c
     spriteBone: []
     spriteOutline: []
@@ -178,18 +178,18 @@ ScriptedImporter:
     indices: 
     edges: []
     tessellationDetail: 0
-    uvTransform: {x: 4, y: 42}
+    uvTransform: {x: 42, y: 39}
   - name: Key_Pedestalv2_Frame_3
     originalName: 
-    pivot: {x: 0.54545456, y: -2.3636365}
+    pivot: {x: 0.53333336, y: -0.6}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
       serializedVersion: 2
-      x: 23
-      y: 4
-      width: 11
-      height: 11
+      x: 4
+      y: 42
+      width: 30
+      height: 30
     spriteID: 1eaf0c96936e68d43a9b962e8aa42006
     spriteBone: []
     spriteOutline: []
@@ -198,18 +198,18 @@ ScriptedImporter:
     indices: 
     edges: []
     tessellationDetail: 0
-    uvTransform: {x: 23, y: 4}
+    uvTransform: {x: 4, y: 42}
   - name: Key_Pedestalv2_Frame_4
     originalName: 
-    pivot: {x: 0.54545456, y: -2.3636365}
+    pivot: {x: 0.53333336, y: -0.6}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
       serializedVersion: 2
-      x: 23
-      y: 23
-      width: 11
-      height: 11
+      x: 4
+      y: 80
+      width: 30
+      height: 30
     spriteID: ba522dd896ad12846bc5370ea6abe375
     spriteBone: []
     spriteOutline: []
@@ -218,18 +218,18 @@ ScriptedImporter:
     indices: 
     edges: []
     tessellationDetail: 0
-    uvTransform: {x: 23, y: 23}
+    uvTransform: {x: 4, y: 80}
   - name: Key_Pedestalv2_Frame_5
     originalName: 
-    pivot: {x: 0.54545456, y: -2.3636365}
+    pivot: {x: 0.56, y: -0.6551724}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
       serializedVersion: 2
-      x: 23
-      y: 42
-      width: 11
-      height: 11
+      x: 42
+      y: 76
+      width: 25
+      height: 29
     spriteID: aeba3c7e8c1617f49a35dc27c5a78dc6
     spriteBone: []
     spriteOutline: []
@@ -238,7 +238,7 @@ ScriptedImporter:
     indices: 
     edges: []
     tessellationDetail: 0
-    uvTransform: {x: 23, y: 42}
+    uvTransform: {x: 42, y: 76}
   spriteSheetImportData: []
   asepriteLayers:
   - layerIndex: 0
@@ -251,50 +251,50 @@ ScriptedImporter:
     - name: Key_Pedestalv2_Frame_0
       frameIndex: 0
       cellRect:
-        x: 26
-        y: 26
-        width: 11
-        height: 11
+        x: 16
+        y: 18
+        width: 30
+        height: 30
       spriteId: 0c38529808c957742a52dd8f5ac276bf
     - name: Key_Pedestalv2_Frame_1
       frameIndex: 1
       cellRect:
-        x: 26
-        y: 26
-        width: 11
-        height: 11
+        x: 16
+        y: 21
+        width: 29
+        height: 27
       spriteId: b720332b6a6731d43be0a08a1f0f7739
     - name: Key_Pedestalv2_Frame_2
       frameIndex: 2
       cellRect:
-        x: 26
-        y: 26
-        width: 11
-        height: 11
+        x: 17
+        y: 19
+        width: 27
+        height: 29
       spriteId: 3b0a7c528df653c4c92fe69d2212e97c
     - name: Key_Pedestalv2_Frame_3
       frameIndex: 3
       cellRect:
-        x: 26
-        y: 26
-        width: 11
-        height: 11
+        x: 16
+        y: 18
+        width: 30
+        height: 30
       spriteId: 1eaf0c96936e68d43a9b962e8aa42006
     - name: Key_Pedestalv2_Frame_4
       frameIndex: 4
       cellRect:
-        x: 26
-        y: 26
-        width: 11
-        height: 11
+        x: 16
+        y: 18
+        width: 30
+        height: 30
       spriteId: ba522dd896ad12846bc5370ea6abe375
     - name: Key_Pedestalv2_Frame_5
       frameIndex: 5
       cellRect:
-        x: 26
-        y: 26
-        width: 11
-        height: 11
+        x: 18
+        y: 19
+        width: 25
+        height: 29
       spriteId: aeba3c7e8c1617f49a35dc27c5a78dc6
     linkedCells: []
     parentIndex: -1

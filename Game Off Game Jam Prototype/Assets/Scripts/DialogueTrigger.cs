@@ -60,9 +60,9 @@ public class DialogueTrigger : MonoBehaviour
         {
             if (dialogueBox.activeInHierarchy)
             {
+                //player.rBody.velocity = Vector2.zero
                 player.rBody.velocity = Vector2.zero;
                 player.AffectedByGravity(false);
-                
                 player.inDialogue = true;
                 player.playerState.canMove = false;
             }
