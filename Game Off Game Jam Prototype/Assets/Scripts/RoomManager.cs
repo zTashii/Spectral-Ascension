@@ -62,14 +62,14 @@ public class RoomManager : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player")&& !collision.isTrigger)
+        if (collision.CompareTag("Player") && !collision.isTrigger)
         {
             virtualCamera.SetActive(true);
         }
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if(collision.CompareTag("Player") && !collision.isTrigger)
+        if (collision.CompareTag("Player") && !collision.isTrigger)
         {
             virtualCamera.SetActive(false);
         }

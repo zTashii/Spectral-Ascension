@@ -62,7 +62,6 @@ public class PlayerController : MonoBehaviour
 
     public bool inDialogue;
 
-
     public static PlayerController instance
     {
         get
@@ -165,6 +164,7 @@ public class PlayerController : MonoBehaviour
             animator.SetBool("isGhost", this.playerState.isGhost);
             this.rBody.bodyType = RigidbodyType2D.Dynamic;
             //this.playerState.canMove = true;
+
             Jump();
             Dash();
             WallSlide();
@@ -182,11 +182,24 @@ public class PlayerController : MonoBehaviour
             animator.SetFloat("xVelocity", 0);
 
         }
+        //if (this.inDialogue)
+        //{
+        //    this.playerState.canFling = false;
+        //}
+        //else
+        //{
+        //    StartCoroutine(FlingWait());
+        //}
 
         CheckOnGround();
         CheckOnWall();
     }
-
+    IEnumerator FlingWait()
+    {
+        
+        yield return new WaitForSeconds(0.5f);
+        this.playerState.canFling = true;
+    }
     public void Move(float direction)
     {
         if (this.playerState.wallGrip)
@@ -392,6 +405,10 @@ public class PlayerController : MonoBehaviour
             this.playerState.onGround = false;
             this.playerState.canDash = true;
         }
+        if(CheckForGround() && this.playerState.isGhost)
+        {
+            Respawn();
+        }
     }
     public bool CheckForGround()
     {
@@ -543,8 +560,8 @@ public class PlayerController : MonoBehaviour
         {
             
             spectralAnchors = collision.gameObject;
-            if(spectralAnchors.GetComponentInChildren<SpectreInteractable>())
-            { 
+            if (spectralAnchors.GetComponentInChildren<SpectreInteractable>())
+            {
                 this.playerState.canFling = !spectralAnchors.GetComponentInChildren<SpectreInteractable>().locked;
 
             }
@@ -574,7 +591,7 @@ public class PlayerController : MonoBehaviour
        
 
     }
-
+    
 
     private void OnTriggerExit2D(Collider2D collision)
     {

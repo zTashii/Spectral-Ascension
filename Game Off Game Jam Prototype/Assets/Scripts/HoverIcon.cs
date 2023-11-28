@@ -7,17 +7,32 @@ public class HoverIcon : MonoBehaviour
     [SerializeField] private float hoverSpeed = 5.0f;
     [SerializeField] private float hoverStrength = 0.15f;
 
-    private float initialYPosition;
+    public bool xAxis;
+    //private float initialPosition;
+    private Vector2 initialPosition;
+
+    private Vector2 newPosition;
 
     private void Start()
     {
-        initialYPosition = transform.position.y;
+            initialPosition = transform.position;
+        
     }
 
     private void Update()
     {
         float hoverOffset = Mathf.Sin(Time.time * hoverSpeed) * hoverStrength;
-        Vector3 newPosition = new Vector3(transform.position.x, initialYPosition) + Vector3.up * hoverOffset;
+        if (xAxis)
+        {
+
+            newPosition = new Vector3(initialPosition.x, transform.position.y) + Vector3.right * hoverOffset;
+
+        }
+        else
+        {
+            newPosition = new Vector3(transform.position.x, initialPosition.y) + Vector3.up * hoverOffset;
+
+        }
         transform.position = newPosition;
     }
 }

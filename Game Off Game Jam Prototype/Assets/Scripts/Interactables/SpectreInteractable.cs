@@ -61,11 +61,13 @@ public class SpectreInteractable : InteractableBase
             if (lockedImage && playerController.playerState.isGhost)
             {
                 lockedImage.SetActive(true);
+                playerController.playerState.canFling = false;
                 
             }
             else if (lockedImage && !playerController.playerState.isGhost)
             {
                 lockedImage.SetActive(false);
+
             }
             if(tutorial && this.playerController.playerState.isGhost)
             {
