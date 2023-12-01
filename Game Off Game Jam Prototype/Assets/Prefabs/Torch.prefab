@@ -96,6 +96,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fireLight: {fileID: 0}
+  minValue: 0.3
+  maxValue: 0.55
   falloffStrength: 0
   interpolationPoint: 0
   normalColour: {r: 0.75294125, g: 0.43137258, b: 0.023529414, a: 1}

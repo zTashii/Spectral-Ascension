@@ -6,7 +6,9 @@ using UnityEngine.Rendering.Universal;
 public class FireFlicker : MonoBehaviour
 {
     public Light2D fireLight;
-    [Range(0.4f, 0.5f)]
+
+    public float minValue;
+    public float maxValue;
     public float falloffStrength;
     [Range(0f,1f)]
     public float interpolationPoint;
@@ -57,7 +59,7 @@ public class FireFlicker : MonoBehaviour
         timeElapsed = 0;
         while (timeElapsed < lerpDur)
         {
-            falloffStrength = Mathf.Lerp(0.3f, 0.55f, timeElapsed / lerpDur);
+            falloffStrength = Mathf.Lerp(minValue, maxValue, timeElapsed / lerpDur);
             timeElapsed += Time.deltaTime;
             fireLight.falloffIntensity = falloffStrength;
             yield return null;

@@ -79,13 +79,17 @@ public class PedestalController : MonoBehaviour
                     {
                         keyDisplay[i].GetComponent<SpriteRenderer>().sprite = normal;
                     }
-                    else if(y < doorControl.KeyCount(Key.KeyType.Spectral))
+                    else
+                    {
+                        keyDisplay[i].GetComponent<SpriteRenderer>().sprite = inactive;
+                    }
+                    if(y < doorControl.KeyCount(Key.KeyType.Spectral))
                     {
                         tinyKeyDisplay[y].GetComponent<SpriteRenderer>().sprite = tinySpectral;
                     }
                     else
                     {
-                        keyDisplay[i].GetComponent<SpriteRenderer>().sprite = inactive;
+                        //keyDisplay[i].GetComponent<SpriteRenderer>().sprite = inactive;
                         tinyKeyDisplay[y].GetComponent<SpriteRenderer>().sprite = tinyInactive;
                     }
 
@@ -113,13 +117,17 @@ public class PedestalController : MonoBehaviour
                     {
                         keyDisplay[i].GetComponent<SpriteRenderer>().sprite = spectral;
                     }
-                    else if (y < doorControl.KeyCount(Key.KeyType.Normal))
+                    else
+                    {
+                        keyDisplay[i].GetComponent<SpriteRenderer>().sprite = inactive;
+
+                    }
+                    if (y < doorControl.KeyCount(Key.KeyType.Normal))
                     {
                         tinyKeyDisplay[y].GetComponent<SpriteRenderer>().sprite = tinyNormal;
                     }
                     else
                     {
-                        keyDisplay[i].GetComponent<SpriteRenderer>().sprite = inactive;
                         tinyKeyDisplay[y].GetComponent<SpriteRenderer>().sprite = tinyInactive;
                     }
                 }

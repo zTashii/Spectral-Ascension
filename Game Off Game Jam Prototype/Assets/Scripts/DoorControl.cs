@@ -108,6 +108,7 @@ public class DoorControl : MonoBehaviour
             {
                 keys.Add(keyControl.key[i]);
                 keyControl.key[i].gameObject.transform.SetParent(this.transform);
+                StartCoroutine(MoreWait());
                 keyControl.key.Remove(keyControl.key[i]);
                 
             }

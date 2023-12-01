@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour
 
     public Rigidbody2D rBody;
 
+    public TrailRenderer trailRenderer;
     public float moveSpeed;
     public float jumpVelocity;
     public float slideSpeed;
@@ -102,6 +103,7 @@ public class PlayerController : MonoBehaviour
     }
     private void Start()
     {
+        trailRenderer = GetComponent<TrailRenderer>();
         animator = GetComponent<Animator>();
         faderAnimator = fader.GetComponent<Animator>();
         impulseSource = GetComponent<CinemachineImpulseSource>();
@@ -131,6 +133,7 @@ public class PlayerController : MonoBehaviour
                 this.FlipSprite();
             }
         }
+
     }
 
     private void SetupReferences()
@@ -305,7 +308,9 @@ public class PlayerController : MonoBehaviour
         this.playerState.canJump = false;
         this.playerState.isDashing = true;
         this.playerState.wallJumping = true;
+        trailRenderer.emitting = true;
         yield return new WaitForSeconds(0.3f);
+        trailRenderer.emitting = false;
         this.playerState.canJump = true;
         this.playerState.wallJumping = false;
         //this.rBody.gravityScale = 7;
@@ -471,6 +476,7 @@ public class PlayerController : MonoBehaviour
         this.rBody.velocity = Vector2.zero;
         this.rBody.bodyType = RigidbodyType2D.Kinematic;
         this.transform.position = this.interactableSpectralAnchor.transform.position;
+        transform.position = new Vector3(transform.position.x, transform.position.y, -0.2f);
         this.anchorPosition = this.transform.position;
         
         yield return new WaitForSeconds(0.5f);
@@ -490,13 +496,17 @@ public class PlayerController : MonoBehaviour
             pull = Vector2.Distance(worldMousePos, mouseDownPos);
             normalizedPull = Mathf.Clamp(Helpers.Map(pull, 0, maxPull, 0, 1), 0, 1);
             ghostDirection = (worldMousePos - mouseDownPos).normalized;
+            //arrow.transform.position = anchorPosition + (ghostDirection * curve.Evaluate(normalizedPull) * maxPull);
+            //arrow.gameObject.SetActive(true);
             transform.position = anchorPosition + (ghostDirection * curve.Evaluate(normalizedPull) * maxPull);
+            transform.position = new Vector3(transform.position.x, transform.position.y, -0.2f);
         }
     }
     private void OnMouseDown()
     {
         if (this.playerState.isGhost && this.playerState.canFling)
         {
+            
             mouseDownPos = GetMouse();
         }
     }
@@ -504,10 +514,12 @@ public class PlayerController : MonoBehaviour
     {
         if (this.playerState.isGhost && this.playerState.canFling)
         {
+            
             rBody.bodyType = RigidbodyType2D.Dynamic;
-            //rBody.velocity = maxSpeed * normalizedPull * -ghostDirection;
+            rBody.velocity = maxSpeed * normalizedPull * -ghostDirection;
             this.rBody.velocity = -ghostDirection * Helpers.Map(normalizedPull, 0, 1, minSpeed, maxSpeed);
             pull = 0;
+            
         }
     }
     private void GetMousePos()
@@ -533,13 +545,20 @@ public class PlayerController : MonoBehaviour
         //Vector3 pPos = new Vector3(Mathf.Round(this.gameObject.transform.position.x), Mathf.Round(this.gameObject.transform.position.y), 0f);
         if(this.gameObject.transform.position != targetPosition)
         {
-            this.gameObject.transform.position = Vector3.MoveTowards(this.gameObject.transform.position, targetPosition, linearSpeed * Time.deltaTime);
+            this.gameObject.transform.position = Vector2.MoveTowards(this.gameObject.transform.position, targetPosition, linearSpeed * Time.deltaTime);
             //this.gameObject.transform.position = Vector2.SmoothDamp(transform.position, targetPosition, ref velocity, 0.5f);
+            
 
-        
+
+
 
         }
+        else
+        {
+            StopCoroutine(MoveTo(spectralAnchors.transform.position, maxSpeed));
+        }
         this.gameObject.transform.position = targetPosition;
+        transform.position = new Vector3(transform.position.x, transform.position.y, -0.2f);
         this.anchorPosition = this.transform.position;
         
     }
@@ -597,7 +616,8 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.CompareTag("Anchor"))
         {
-            this.anchorPosition = Vector2.zero;
+            StopCoroutine(MoveTo(spectralAnchors.transform.position, maxSpeed));
+            //this.anchorPosition = Vector2.zero;
 
 
         }
